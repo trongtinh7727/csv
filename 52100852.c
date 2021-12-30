@@ -488,7 +488,7 @@ int main(int argc, char const *argv[])
             countDepart(control);
             break;
         case 1:
-            if (strcmp(control, "male") == 0 || strcmp(control, "female") != 0)
+            if (strcmp(control, "male") == 0 || strcmp(control, "female") == 0)
             {
                 control[0] = toupper(control[0]);
                 listGender(control);
