@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#define MAX 1000
+#define MAX 2000
 
 struct Employee
 {
@@ -15,13 +15,6 @@ struct Employee
     char *country;
 };
 
-struct Project
-{
-    char *pID;
-    char *pName;
-    int week;
-};
-
 struct Progress
 {
     char *eID;
@@ -30,23 +23,17 @@ struct Progress
 };
 
 struct Employee employee[MAX];
-struct Project project[MAX];
 struct Progress progress[MAX];
 
 int setEmployee()
 {
     FILE *in;
-    char *buf = malloc(1024);
+    char *buf = malloc(500);
     char *tmp;
     char trash[256];
-    if (buf == NULL)
+    if ((in = fopen("Employee.csv", "r")) == NULL)
     {
-        printf("No memory\n");
-        return 1;
-    }
-    if ((in = fopen("Employee.csv", "r")) == NULL) // Reading a file
-    {
-        printf("File could not be opened.\n");
+        
     }
     int i = 0;
 
@@ -95,56 +82,6 @@ void getEmployee(int n)
     fclose(op);
 }
 
-int setProject()
-{
-    FILE *inp;
-    char *buf = malloc(256);
-    char *tmp;
-    if (buf == NULL)
-    {
-        printf("No memory\n");
-        return 1;
-    }
-
-    if ((inp = fopen("Project.csv", "r")) == NULL)
-    {
-        printf("File could not be opened.\n");
-    }
-
-    int i = 0;
-    while (fgets(buf, 255, inp) != NULL)
-    {
-        if ((strlen(buf) > 0) && (buf[strlen(buf) - 1] == '\n'))
-            buf[strlen(buf) - 1] = '\0';
-
-        tmp = strtok(buf, ",");
-        project[i].pID = strdup(tmp);
-
-        tmp = strtok(NULL, ",");
-        project[i].pName = strdup(tmp);
-
-        tmp = strtok(NULL, ",");
-        project[i].week = atoi(tmp);
-        i++;
-    }
-    fclose(inp);
-    return 0;
-}
-
-void getProject()
-{
-
-    int i;
-
-    for (i = 0; i <= sizeof(project); i++)
-    {
-        if (project[i].pID != NULL)
-            printf("%s\t%s\t%d\n", project[i].pID, project[i].pName, project[i].week);
-        else
-            break;
-    }
-}
-
 int setProgress()
 {
     FILE *inp;
@@ -179,19 +116,6 @@ int setProgress()
     }
     fclose(inp);
     return 0;
-}
-
-void getProgress()
-{
-    int i;
-
-    for (i = 0; i <= sizeof(progress); i++)
-    {
-        if (progress[i].pID != NULL)
-            printf("%s\t%s\t%f\n", progress[i].eID, progress[i].pID, progress[i].pg);
-        else
-            break;
-    }
 }
 
 void countDepart(char de[])
@@ -418,6 +342,8 @@ void setlist()
 int checkn(char *s)
 {
     int len = strlen(s), i, dot = 0;
+    
+    
     for (i = 0; i < len - 1; i++)
     {
         if (isdigit(s[i]) == 0)
@@ -436,6 +362,10 @@ int checkn(char *s)
 int checkcmd(char *s)
 {
     int i, space = 0;
+    if (s[0]==' ' || s[strlen(s)-2]==' ')
+    {
+        return 0;
+    }
     for (i = 0; i < strlen(s); i++)
     {
         if (s[i] == ' ')
@@ -484,7 +414,6 @@ int main(int argc, char const *argv[])
         switch (cmd)
         {
         case 0:
-            printf("%s",control);
             countDepart(control);
             break;
         case 1:
