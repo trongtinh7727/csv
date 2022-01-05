@@ -33,7 +33,6 @@ int setEmployee()
     char trash[256];
     if ((in = fopen("Employee.csv", "r")) == NULL)
     {
-        
     }
     int i = 0;
 
@@ -75,7 +74,7 @@ void getEmployee(int n)
     FILE *op;
     op = fopen("result.csv", "wt");
     int i;
-    for (i = 0; i <= n; i++)
+    for (i = 1; i < n; i++)
     {
         fprintf(op, "%s,%s,%s,%s,%s,%s,%s", employee[i].eID, employee[i].fName, employee[i].lName, employee[i].gender, employee[i].birth, employee[i].depart, employee[i].country);
     }
@@ -123,7 +122,7 @@ void countDepart(char de[])
 
     int i;
     long c = 0;
-    for (i = 0; i <= sizeof(employee); i++)
+    for (i = 1; i <= sizeof(employee); i++)
     {
         if (employee[i].eID != NULL)
         {
@@ -146,8 +145,8 @@ void listGender(char sex[])
 {
     FILE *op;
     op = fopen("result.csv", "w+");
-    int i;
-    for (i = 0; i <= sizeof(employee); i++)
+    int i=0;
+    for (i = 1; i < sizeof(employee); i++)
     {
 
         if (employee[i].eID != NULL)
@@ -168,7 +167,7 @@ void reportn(float n)
     FILE *op;
     op = fopen("result.csv", "wt");
     int i;
-    for (i = 0; i <= sizeof(progress); i++)
+    for (i = 1; i <= sizeof(progress); i++)
     {
         if (progress[i].eID != NULL)
         {
@@ -189,7 +188,7 @@ void averageX(char *x)
     op = fopen("result.csv", "wt");
     int i, d = 0;
     float tb = 0;
-    for (i = 0; i <= sizeof(progress); i++)
+    for (i = 1; i <= sizeof(progress); i++)
     {
         if (progress[i].eID != NULL)
         {
@@ -202,7 +201,14 @@ void averageX(char *x)
         else
             break;
     }
-    fprintf(op, "%.3f", tb / d);
+    if (d == 0)
+    {
+        fprintf(op, "%.3f", d);
+    }
+    else
+    {
+        fprintf(op, "%.3f", tb / d);
+    }
     fclose(op);
 }
 
@@ -210,11 +216,11 @@ void sortASC(int n)
 {
     struct Employee temp;
     int i, j;
-    for (i = 0; i < n - 1; i++)
+    for (i = 1; i < n - 1; i++)
     {
         if (employee[i].eID != NULL)
         {
-            for (j = 0; j < n - i - 1; j++)
+            for (j = 1; j < n - i - 1; j++)
             {
                 if (employee[j].eID != NULL)
                 {
@@ -247,11 +253,11 @@ void sortDESC(int n)
 {
     struct Employee temp;
     int i, j;
-    for (i = 0; i < n - 1; i++)
+    for (i = 1; i < n - 1; i++)
     {
         if (employee[i].eID != NULL)
         {
-            for (j = 0; j < n - i - 1; j++)
+            for (j = 1; j < n - i - 1; j++)
             {
                 if (employee[j].eID != NULL)
                 {
@@ -285,14 +291,14 @@ void listCountry(char country[])
     FILE *op;
     op = fopen("result.csv", "wt");
     int i;
-    for (i = 0; i <= sizeof(employee); i++)
+    for (i = 1; i <= sizeof(employee); i++)
     {
         if (employee[i].eID != NULL)
         {
-            if (employee[i].country[strlen(employee[i].country)-1] <=32)
+            if (employee[i].country[strlen(employee[i].country) - 1] <= 32)
             {
-                employee[i].country[strlen(employee[i].country)-1]='\0';
-            } 
+                employee[i].country[strlen(employee[i].country) - 1] = '\0';
+            }
             if (strcmp(employee[i].country, country) == 0)
             {
                 fprintf(op, "%s,%s,%s,%s,%s,%s,%s\n", employee[i].eID, employee[i].fName, employee[i].lName, employee[i].gender, employee[i].birth, employee[i].depart, employee[i].country);
@@ -302,15 +308,6 @@ void listCountry(char country[])
             break;
     }
     fclose(op);
-}
-
-int creatfa(long c)
-{
-    FILE *fp;
-    int ret;
-    fp = fopen("result.csv", "wt");
-    fprintf(fp, "%ld", c);
-    fclose(fp);
 }
 
 void wrong()
@@ -342,8 +339,7 @@ void setlist()
 int checkn(char *s)
 {
     int len = strlen(s), i, dot = 0;
-    
-    
+
     for (i = 0; i < len - 1; i++)
     {
         if (isdigit(s[i]) == 0)
@@ -362,7 +358,7 @@ int checkn(char *s)
 int checkcmd(char *s)
 {
     int i, space = 0;
-    if (s[0]==' ' || s[strlen(s)-2]==' ')
+    if (s[0] == ' ' || s[strlen(s) - 2] == ' ')
     {
         return 0;
     }
@@ -398,9 +394,9 @@ int main(int argc, char const *argv[])
         command = strdup(tmp);
         tmp = strtok(NULL, " ");
         control = strdup(tmp);
-        if (control[strlen(control)-1]< 32)
+        if (control[strlen(control) - 1] < 32)
         {
-            control[strlen(control)-1]='\0';
+            control[strlen(control) - 1] = '\0';
         }
         setlist();
         for (i = 0; i < 6; i++)
