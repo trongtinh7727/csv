@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#define MAX 2000
+#define MAX 10000
 
 struct Employee
 {
@@ -25,7 +25,7 @@ struct Progress
 struct Employee employee[MAX];
 struct Progress progress[MAX];
 
-int setEmployee()
+long setEmployee()
 {
     FILE *in;
     char *buf = malloc(500);
@@ -34,7 +34,7 @@ int setEmployee()
     if ((in = fopen("Employee.csv", "r")) == NULL)
     {
     }
-    int i = 0;
+    long i = 0;
 
     while (fgets(buf, 255, in) != NULL)
     {
@@ -69,11 +69,11 @@ int setEmployee()
     return i;
 }
 
-void getEmployee(int n)
+void getEmployee(long n)
 {
     FILE *op;
     op = fopen("result.csv", "wt");
-    int i;
+   long i;
     for (i = 1; i < n; i++)
     {
         fprintf(op, "%s,%s,%s,%s,%s,%s,%s", employee[i].eID, employee[i].fName, employee[i].lName, employee[i].gender, employee[i].birth, employee[i].depart, employee[i].country);
@@ -81,7 +81,7 @@ void getEmployee(int n)
     fclose(op);
 }
 
-int setProgress()
+long setProgress()
 {
     FILE *inp;
     char *buf = malloc(256);
@@ -97,7 +97,7 @@ int setProgress()
         printf("File could not be opened.\n");
     }
 
-    int i = 0;
+    long i = 0;
     while (fgets(buf, 255, inp) != NULL)
     {
         if ((strlen(buf) > 0) && (buf[strlen(buf) - 1] == '\n'))
@@ -120,7 +120,7 @@ int setProgress()
 void countDepart(char de[])
 {
 
-    int i;
+    long i;
     long c = 0;
     for (i = 1; i <= sizeof(employee); i++)
     {
@@ -145,7 +145,7 @@ void listGender(char sex[])
 {
     FILE *op;
     op = fopen("result.csv", "w+");
-    int i=0;
+    long i = 0;
     for (i = 1; i < sizeof(employee); i++)
     {
 
@@ -165,15 +165,30 @@ void listGender(char sex[])
 void reportn(float n)
 {
     FILE *op;
+    struct Progress temp[MAX];
+    long c = 0;
+    long j;
     op = fopen("result.csv", "wt");
-    int i;
+    long i;
     for (i = 1; i <= sizeof(progress); i++)
     {
         if (progress[i].eID != NULL)
         {
             if (progress[i].pg == n)
             {
-                fprintf(op, "%s\n", progress[i].eID);
+                long d = 0;
+                for (j = 0; j < c; j++)
+                {
+                    if ( strcmp(progress[i].eID,temp[j].eID) ==0)
+                    {
+                        d++;
+                    }
+                }
+                if (d == 0)
+                {
+                    fprintf(op, "%s\n", progress[i].eID);
+                    temp[c++] = progress[i];
+                }
             }
         }
         else
@@ -186,7 +201,7 @@ void averageX(char *x)
 {
     FILE *op;
     op = fopen("result.csv", "wt");
-    int i, d = 0;
+    long i, d = 0;
     float tb = 0;
     for (i = 1; i <= sizeof(progress); i++)
     {
@@ -212,15 +227,15 @@ void averageX(char *x)
     fclose(op);
 }
 
-void sortASC(int n)
+void sortASC(long n)
 {
     struct Employee temp;
-    int i, j;
-    for (i = 1; i < n - 1; i++)
+    long i, j;
+    for (i = 1; i < n ; i++)
     {
         if (employee[i].eID != NULL)
         {
-            for (j = 1; j < n - i - 1; j++)
+            for (j = 1; j < n - i ; j++)
             {
                 if (employee[j].eID != NULL)
                 {
@@ -249,15 +264,15 @@ void sortASC(int n)
     }
 }
 
-void sortDESC(int n)
+void sortDESC(long n)
 {
     struct Employee temp;
-    int i, j;
-    for (i = 1; i < n - 1; i++)
+    long i, j;
+    for (i = 1; i < n ; i++)
     {
         if (employee[i].eID != NULL)
         {
-            for (j = 1; j < n - i - 1; j++)
+            for (j = 1; j < n - i ; j++)
             {
                 if (employee[j].eID != NULL)
                 {
@@ -290,7 +305,7 @@ void listCountry(char country[])
 {
     FILE *op;
     op = fopen("result.csv", "wt");
-    int i;
+    long i;
     for (i = 1; i <= sizeof(employee); i++)
     {
         if (employee[i].eID != NULL)
@@ -313,7 +328,7 @@ void listCountry(char country[])
 void wrong()
 {
     FILE *fp;
-    int ret;
+    long ret;
     fp = fopen("check.txt", "wt");
     fprintf(fp, "%s", "wrong syntax");
     fclose(fp);
@@ -336,9 +351,9 @@ void setlist()
     listC[5].command = "country";
 }
 
-int checkn(char *s)
+long checkn(char *s)
 {
-    int len = strlen(s), i, dot = 0;
+    long len = strlen(s), i, dot = 0;
 
     for (i = 0; i < len - 1; i++)
     {
@@ -355,9 +370,9 @@ int checkn(char *s)
     return 1;
 }
 
-int checkcmd(char *s)
+long checkcmd(char *s)
 {
-    int i, space = 0;
+    long i, space = 0;
     if (s[0] == ' ' || s[strlen(s) - 2] == ' ')
     {
         return 0;
@@ -382,7 +397,7 @@ int main(int argc, char const *argv[])
 {
 
     char buf[255], *tmp, *control, *command;
-    int i, cmd = -1, space = 0, len;
+    long i, cmd = -1, space = 0, len;
     float n;
     len = setEmployee();
     setProgress();
