@@ -30,19 +30,10 @@ long setEmployee()
     FILE *in;
     char *buf = malloc(500);
     char *tmp;
-    char trash[256];
-    if ((in = fopen("Employee.csv", "r")) == NULL)
-    {
-    }
     long i = 0;
 
     while (fgets(buf, 255, in) != NULL)
     {
-        if ((strlen(buf) > 0) && (buf[strlen(buf) - 1] == '\n'))
-        {
-            buf[strlen(buf) - 1] = '\0';
-        }
-
         tmp = strtok(buf, ",");
         employee[i].eID = strdup(tmp);
 
@@ -73,7 +64,7 @@ void getEmployee(long n)
 {
     FILE *op;
     op = fopen("result.csv", "wt");
-   long i;
+    long i;
     for (i = 1; i < n; i++)
     {
         fprintf(op, "%s,%s,%s,%s,%s,%s,%s", employee[i].eID, employee[i].fName, employee[i].lName, employee[i].gender, employee[i].birth, employee[i].depart, employee[i].country);
@@ -86,23 +77,9 @@ long setProgress()
     FILE *inp;
     char *buf = malloc(256);
     char *tmp;
-    if (buf == NULL)
-    {
-        printf("No memory\n");
-        return 1;
-    }
-
-    if ((inp = fopen("Progress.csv", "r")) == NULL)
-    {
-        printf("File could not be opened.\n");
-    }
-
     long i = 0;
     while (fgets(buf, 255, inp) != NULL)
     {
-        if ((strlen(buf) > 0) && (buf[strlen(buf) - 1] == '\n'))
-            buf[strlen(buf) - 1] = '\0';
-
         tmp = strtok(buf, ",");
         progress[i].eID = strdup(tmp);
 
@@ -113,8 +90,9 @@ long setProgress()
         progress[i].pg = atof(tmp);
         i++;
     }
+    free(buf);
     fclose(inp);
-    return 0;
+    return i;
 }
 
 void countDepart(char de[])
@@ -202,7 +180,7 @@ void averageX(char *x)
     FILE *op;
     op = fopen("result.csv", "wt");
     long i, d = 0;
-    float tb = 0;
+    double tb = 0;
     for (i = 1; i <= sizeof(progress); i++)
     {
         if (progress[i].eID != NULL)
@@ -218,11 +196,11 @@ void averageX(char *x)
     }
     if (d == 0)
     {
-        fprintf(op, "%.3f", d);
+        fprintf(op, "%.3lf", d);
     }
     else
     {
-        fprintf(op, "%.3f", tb / d);
+        fprintf(op, "%.3lf", tb / d);
     }
     fclose(op);
 }
