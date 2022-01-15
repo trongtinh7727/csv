@@ -25,15 +25,27 @@ struct Progress
 struct Employee employee[MAX];
 struct Progress progress[MAX];
 
+void low(char *p)
+{
+    for (; *p; ++p)
+        *p = tolower(*p);
+}
+
 long setEmployee()
 {
     FILE *in;
     char *buf = malloc(500);
     char *tmp;
+    char trash[256];
+    in = fopen("Employee.csv", "r");
     long i = 0;
 
     while (fgets(buf, 255, in) != NULL)
     {
+        if ((strlen(buf) > 0) && (buf[strlen(buf) - 2] <= 32))
+        {
+            buf[strlen(buf) - 2] = '\0';
+        }
         tmp = strtok(buf, ",");
         employee[i].eID = strdup(tmp);
 
@@ -67,7 +79,7 @@ void getEmployee(long n)
     long i;
     for (i = 1; i < n; i++)
     {
-        fprintf(op, "%s,%s,%s,%s,%s,%s,%s", employee[i].eID, employee[i].fName, employee[i].lName, employee[i].gender, employee[i].birth, employee[i].depart, employee[i].country);
+        fprintf(op, "%s,%s,%s,%s,%s,%s,%s\n", employee[i].eID, employee[i].fName, employee[i].lName, employee[i].gender, employee[i].birth, employee[i].depart, employee[i].country);
     }
     fclose(op);
 }
@@ -77,9 +89,16 @@ long setProgress()
     FILE *inp;
     char *buf = malloc(256);
     char *tmp;
+    inp = fopen("Progress.csv", "r");
+
     long i = 0;
     while (fgets(buf, 255, inp) != NULL)
     {
+        if ((strlen(buf) > 0) && (buf[strlen(buf) - 1] == '\n'))
+        {
+            buf[strlen(buf) - 1] = '\0';
+        }
+
         tmp = strtok(buf, ",");
         progress[i].eID = strdup(tmp);
 
@@ -90,9 +109,8 @@ long setProgress()
         progress[i].pg = atof(tmp);
         i++;
     }
-    free(buf);
     fclose(inp);
-    return i;
+    return 0;
 }
 
 void countDepart(char de[])
@@ -131,7 +149,7 @@ void listGender(char sex[])
         {
             if (strcmp(employee[i].gender, sex) == 0)
             {
-                fprintf(op, "%s,%s,%s,%s,%s,%s,%s", employee[i].eID, employee[i].fName, employee[i].lName, employee[i].gender, employee[i].birth, employee[i].depart, employee[i].country);
+                fprintf(op, "%s,%s,%s,%s,%s,%s,%s\n", employee[i].eID, employee[i].fName, employee[i].lName, employee[i].gender, employee[i].birth, employee[i].depart, employee[i].country);
             }
         }
         else
@@ -157,7 +175,7 @@ void reportn(float n)
                 long d = 0;
                 for (j = 0; j < c; j++)
                 {
-                    if ( strcmp(progress[i].eID,temp[j].eID) ==0)
+                    if (strcmp(progress[i].eID, temp[j].eID) == 0)
                     {
                         d++;
                     }
@@ -208,24 +226,33 @@ void averageX(char *x)
 void sortASC(long n)
 {
     struct Employee temp;
+    char s1[30], s2[30];
     long i, j;
-    for (i = 1; i < n ; i++)
+    for (i = 1; i < n; i++)
     {
         if (employee[i].eID != NULL)
         {
-            for (j = 1; j < n - i ; j++)
+            for (j = 1; j < n - i; j++)
             {
                 if (employee[j].eID != NULL)
                 {
-                    if (strcmp(employee[j].lName, employee[j + 1].lName) > 0)
+                    strcpy(s1, employee[j].lName);
+                    strcpy(s2, employee[j + 1].lName);
+                    low(s1);
+                    low(s2);
+                    if (strcmp(s1, s2) > 0)
                     {
                         temp = employee[j];
                         employee[j] = employee[j + 1];
                         employee[j + 1] = temp;
                     }
-                    else if (strcmp(employee[j].lName, employee[j + 1].lName) == 0)
+                    else if (strcmp(s1, s2) == 0)
                     {
-                        if (strcmp(employee[j].fName, employee[j + 1].fName) > 0)
+                        strcpy(s1, employee[j].fName);
+                        strcpy(s2, employee[j + 1].fName);
+                        low(s1);
+                        low(s2);
+                        if (strcmp(s1, s2) > 0)
                         {
                             temp = employee[j];
                             employee[j] = employee[j + 1];
@@ -246,23 +273,32 @@ void sortDESC(long n)
 {
     struct Employee temp;
     long i, j;
-    for (i = 1; i < n ; i++)
+    char s1[30], s2[30];
+    for (i = 1; i < n; i++)
     {
         if (employee[i].eID != NULL)
         {
-            for (j = 1; j < n - i ; j++)
+            for (j = 1; j < n - i; j++)
             {
                 if (employee[j].eID != NULL)
                 {
-                    if (strcmp(employee[j].lName, employee[j + 1].lName) < 0)
+                    strcpy(s1, employee[j].lName);
+                    strcpy(s2, employee[j + 1].lName);
+                    low(s1);
+                    low(s2);
+                    if (strcmp(s1, s2) < 0)
                     {
                         temp = employee[j];
                         employee[j] = employee[j + 1];
                         employee[j + 1] = temp;
                     }
-                    else if (strcmp(employee[j].lName, employee[j + 1].lName) == 0)
+                    else if (strcmp(s1, s2) == 0)
                     {
-                        if (strcmp(employee[j].fName, employee[j + 1].fName) > 0)
+                        strcpy(s1, employee[j].fName);
+                        strcpy(s2, employee[j + 1].fName);
+                        low(s1);
+                        low(s2);
+                        if (strcmp(s1, s2) > 0)
                         {
                             temp = employee[j];
                             employee[j] = employee[j + 1];
@@ -288,10 +324,6 @@ void listCountry(char country[])
     {
         if (employee[i].eID != NULL)
         {
-            if (employee[i].country[strlen(employee[i].country) - 1] <= 32)
-            {
-                employee[i].country[strlen(employee[i].country) - 1] = '\0';
-            }
             if (strcmp(employee[i].country, country) == 0)
             {
                 fprintf(op, "%s,%s,%s,%s,%s,%s,%s\n", employee[i].eID, employee[i].fName, employee[i].lName, employee[i].gender, employee[i].birth, employee[i].depart, employee[i].country);
@@ -363,12 +395,6 @@ long checkcmd(char *s)
         }
     }
     return space;
-}
-
-void low(char *p)
-{
-    for (; *p; ++p)
-        *p = tolower(*p);
 }
 
 int main(int argc, char const *argv[])
