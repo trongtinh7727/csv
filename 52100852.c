@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -364,8 +365,12 @@ void setlist()
 long checkn(char *s)
 {
     long len = strlen(s), i, dot = 0;
+    if (s[0] == '.' || s[len -1] =='.')
+    {
+        return 0;
+    }
 
-    for (i = 0; i < len - 1; i++)
+    for (i = 0; i < len; i++)
     {
         if (isdigit(s[i]) == 0)
         {
@@ -425,7 +430,6 @@ int main(int argc, char const *argv[])
                 cmd = i;
             }
         }
-
         switch (cmd)
         {
         case 0:
@@ -458,8 +462,8 @@ int main(int argc, char const *argv[])
                 wrong();
             }
             break;
-        case 3:
-            averageX(control);
+        case 3: 
+           averageX(control);
             break;
         case 4:
             if (strcmp(control, "asc") == 0)
