@@ -215,7 +215,7 @@ void averageX(char *x)
     }
     if (d == 0)
     {
-        fprintf(op, "%.3lf", d);
+        fprintf(op, "%ld", d);
     }
     else
     {
@@ -365,7 +365,7 @@ void setlist()
 long checkn(char *s)
 {
     long len = strlen(s), i, dot = 0;
-    if (s[0] == '.' || s[len -1] =='.')
+    if (s[0] == '.' || s[len - 1] == '.')
     {
         return 0;
     }
@@ -411,6 +411,10 @@ int main(int argc, char const *argv[])
     len = setEmployee();
     setProgress();
     fgets(buf, 255, stdin);
+    if (buf[strlen(buf) - 1] == '\n')
+    {
+        buf[strlen(buf) - 1] = '\0';
+    }
     if (checkcmd(buf) == 1)
     {
         low(buf);
@@ -462,8 +466,8 @@ int main(int argc, char const *argv[])
                 wrong();
             }
             break;
-        case 3: 
-           averageX(control);
+        case 3:
+            averageX(control);
             break;
         case 4:
             if (strcmp(control, "asc") == 0)
