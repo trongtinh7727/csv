@@ -388,7 +388,7 @@ long checkn(char *s)
 long checkcmd(char *s)
 {
     long i, space = 0;
-    if (s[0] == ' ' || s[strlen(s) - 2] == ' ')
+    if (s[0] == ' ' || s[strlen(s) - 1] == ' ')
     {
         return 0;
     }
