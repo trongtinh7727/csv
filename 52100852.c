@@ -437,7 +437,15 @@ int main(int argc, char const *argv[])
         switch (cmd)
         {
         case 0:
-            countDepart(control);
+            if (control[0] == '-')
+            {
+                wrong();
+            }
+            else
+            {
+                countDepart(control);
+            }
+
             break;
         case 1:
             if (strcmp(control, "male") == 0 || strcmp(control, "female") == 0)
@@ -467,7 +475,14 @@ int main(int argc, char const *argv[])
             }
             break;
         case 3:
-            averageX(control);
+            if (control[0] == '-')
+            {
+                wrong();
+            }
+            else
+            {
+                averageX(control);
+            }
             break;
         case 4:
             if (strcmp(control, "asc") == 0)
