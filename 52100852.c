@@ -501,8 +501,15 @@ int main(int argc, char const *argv[])
             }
             break;
         case 5:
-            control[0] = toupper(control[0]);
-            listCountry(control);
+            if (control[0] == '-')
+            {
+                wrong();
+            }
+            else
+            {
+                control[0] = toupper(control[0]);
+                listCountry(control);
+            }
             break;
         default:
             wrong();
