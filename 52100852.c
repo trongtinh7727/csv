@@ -37,7 +37,6 @@ long setEmployee()
     FILE *in;
     char *buf = malloc(500);
     char *tmp;
-    char trash[256];
     in = fopen("Employee.csv", "r");
     long i = 0;
 
