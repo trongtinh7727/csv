@@ -42,9 +42,9 @@ long setEmployee()
 
     while (fgets(buf, 255, in) != NULL)
     {
-        if ((strlen(buf) > 0) && (buf[strlen(buf) - 2] <= 32))
+        while ((strlen(buf) > 0) && (buf[strlen(buf) - 1] <= 32))
         {
-            buf[strlen(buf) - 2] = '\0';
+            buf[strlen(buf) - 1] = '\0';
         }
         tmp = strtok(buf, ",");
         employee[i].eID = strdup(tmp);
@@ -433,6 +433,7 @@ int main(int argc, char const *argv[])
                 cmd = i;
             }
         }
+        
         switch (cmd)
         {
         case 0:
